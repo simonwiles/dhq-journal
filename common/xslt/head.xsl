@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xmlns:dhq="http://www.digitalhumanities.org/ns/dhq"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     
     <xsl:param name="context"/>
@@ -12,8 +14,13 @@
     <xsl:template name="head">
         <xsl:param name="title"/>
         <head>
-            <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-            <title>
+          <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+          <meta name="article type" class="staticSearch_desc" content="{/*/tei:teiHeader//dhq:articleType}"/>
+          <meta name="date of publication" class="staticSearch_date" content="{/*/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:date/@when}"/>
+          <meta name="volume" class="staticSearch_num" content="{/*/tei:teiHeader//tei:idno[@type = 'volume']}"/>
+          <meta name="issue"  class="staticSearch_num" content="{/*/tei:teiHeader//tei:idno[@type = 'issue' ]}"/>
+          <xsl:apply-templates select="/*/tei:teiHeader//tei:keywords//tei:item[ normalize-space(.) != '']" mode="keyword"/>
+          <title>
                 <!-- Articles can have more than one <title> in <titleStmt> if more 
                   than one language is represented. By default, this stylesheet will 
                   take the first one offered. To ensure that the expected title is 
@@ -89,6 +96,11 @@ s.parentNode.insertBefore(ga, s);
             
             
         </head>
+    </xsl:template>
+
+    <xsl:template match="tei:item" mode="keyword">
+      <xsl:variable name="name" select="substring( normalize-space( ancestor::tei:keywords/@scheme ), 2 )"/>
+      <meta name="{$name}" class="staticSearch_feat" content="{normalize-space(.)}"/>
     </xsl:template>
     
     <!-- customHead template (below) may be overridden in article-specific XSLT (in articles/XXXXXX/resources/xslt/XXXXXX.xsl) to include additional stuff in the HTML <head>. See 000151. -->

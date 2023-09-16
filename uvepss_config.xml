@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- University of Victory Endings Project Static Site configuration -->
+<!-- See, e.g., https://endings.uvic.ca/staticSearch/docs/howDoIUseIt.html -->
+<config xmlns="http://hcmc.uvic.ca/ns/staticSearch" version="1">
+  <params>
+    <searchFile>staticSearchTest.xhtml</searchFile>
+    <recurse>false</recurse>
+    <stopwordsFile>data/stopwords_en.txt</stopwordsFile>
+    <dictionaryFile>data/words_en.txt</dictionaryFile>
+    <!-- above required; below optional -->
+    <maxKwicsToHarvest>12</maxKwicsToHarvest>
+    <maxKwicsToShow>12</maxKwicsToShow>
+    <versionFile>version.txt</versionFile>
+    <createContexts>true</createContexts>
+    <phrasalSearch>true</phrasalSearch>
+    <scoringAlgorithm>tf-idf</scoringAlgorithm>
+    <totalKwicLength>11</totalKwicLength>
+    <kwicTruncateString>…</kwicTruncateString>
+    <verbose>false</verbose> 	<!-- turn on for debugging index process -->
+    <indentJSON>false</indentJSON> <!-- turn on for debugging -->
+    <outputFolder>uvepss</outputFolder>
+  </params>
+  <rules>
+    <rule match="text()[not( ancestor::div[@id eq 'mainContent'] )]" weight="0"/>
+  </rules>
+  <!-- <contexts> -->
+  <!-- </contexts> -->
+</config>

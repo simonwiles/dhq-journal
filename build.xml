@@ -138,6 +138,8 @@ is loaded when Ant starts up. Please run Ant again like this:
         <file name="robots.txt"/>
         <!--<file name="sitemap.xmap"/>-->
         <file name="sruExplain.xml"/>
+	<file name="uvepss_config.xml"/>
+	<file name="staticSearchTest.xhtml"/>
       </filelist>
     </copy>
     <!-- Copy text files in the submissions directory. -->
@@ -147,6 +149,10 @@ is loaded when Ant starts up. Please run Ant again like this:
     <!-- Copy web assets. -->
     <copy todir="${toDir.static}${file.separator}common">
       <fileset dir="common" excludes="lib/ tests/"/>
+    </copy>
+    <copy todir="${toDir.static}${file.separator}data">
+      <file name="data/stopwords_en.txt"/>
+      <file name="data/words_en.txt"/>
     </copy>
     <!-- Transform the test file.
       TODO: is this still necessary? -->
