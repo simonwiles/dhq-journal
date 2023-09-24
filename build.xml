@@ -98,6 +98,11 @@ is loaded when Ant starts up. Please run Ant again like this:
     <echo>  it uses absolute filepaths to its assets. Thus it will not work properly</echo>
     <echo>  (and will look ugly) if viewed on your local machine.</echo>
     <echo>generateSite</echo>
+    <echo>  As above, but also copies over the submissions/ subdirectory, the common/</echo>
+    <echo>  subdirectory, and some specific (including those needed for generating</echo>
+    <echo>  the UVEPSS (University of Victoria Endings’s Project Static Search) indices</echo>
+    <echo>  and search page.</echo>
+    <echo>generateZipSite</echo>
     <echo>  As above, but also ZIPs up the entire ${toDir.static}/ directory to make</echo>
     <echo>  it easy to transfer (e.g., to a server). The output file can be found at</echo>
     <echo>  ${toDir.base}${file.separator}${context}.zip.</echo>
@@ -142,6 +147,11 @@ is loaded when Ant starts up. Please run Ant again like this:
 	<file name="staticSearchTest.xhtml"/>
       </filelist>
     </copy>
+    <!-- Copy specific files in the data/ directory -->
+    <copy todir="${toDir.static}${file.separator}data">
+      <file name="data/stopwords_en.txt"/>
+      <file name="data/words_en.txt"/>
+    </copy>
     <!-- Copy text files in the submissions directory. -->
     <copy todir="${toDir.static}${file.separator}submissions">
       <fileset dir="submissions" includes="*.txt"/>
@@ -149,10 +159,6 @@ is loaded when Ant starts up. Please run Ant again like this:
     <!-- Copy web assets. -->
     <copy todir="${toDir.static}${file.separator}common">
       <fileset dir="common" excludes="lib/ tests/"/>
-    </copy>
-    <copy todir="${toDir.static}${file.separator}data">
-      <file name="data/stopwords_en.txt"/>
-      <file name="data/words_en.txt"/>
     </copy>
     <!-- Transform the test file.
       TODO: is this still necessary? -->
@@ -179,6 +185,83 @@ is loaded when Ant starts up. Please run Ant again like this:
       <param name="context" expression="dhq"/>
       <param name="dir-separator" expression="${file.separator}"/>
     </xslt>
+    <echo file="${toDir.static}${file.separator}uvepss.bash">#! /bin/bash
+
+# Execute `ant` from the provided path (to the UVic staticSearch directory), pointing
+# it back to the uvepss_config file in this directory (where “this” is the DHQ static
+# site directory).
+
+# Why this file exists:
+# One disadvantage of the UVic Endings Project’s staticSearch indexer is that it will
+# look at *every* .html file in the input directory, and presume it is well-formed
+# XHTML. It dies if even one of them is _not_ well-formed. So this routine simply
+# finds all ill-formed .html files, renames them out of the way, runs the ant command,
+# and then puts them back.
+
+# This command should be run *from* the dhq-static/ directory generated from the
+# dhq-journal/ directory by using (e.g.) `time ant -lib common/lib generateSite`.
+# The one and only argument should be a the path to the staticSite directory. (If
+# it is a path to a file in that directory, like the build.xml file, e.g., the
+# file portion is just stripped off.)
+
+# error exit routine
+die() {
+    echo "ERROR from ${MYNAME}.bash $date: $@."
+    exit 1
+}
+
+# error continue routine
+err() {
+    echo "WARNING: error from ${MYNAME}.bash $date: $@."
+}
+
+# fake extension to avoid processing; use of anthing with "htm" will
+# fail. See $UVEPSSdir/build.xml line ~215.
+fakext=".NOThypertextmmarkuplanguage"
+
+# --------- main pgm starts ---------
+
+# watch what happens, as it happens
+# set -o xtrace
+
+if [ $# -gt 1 ]; then
+    die "Must be at most 1 argument (the path to staticSearch/)."
+fi
+UVEPSSdir=${1:-/home/syd/Documents/staticSearch/}
+
+
+echo "--------- PRESS step: rename ill-formed .html files to _NOT"
+count=0
+for f in $(find . -name '*.html') ; do
+    path=$(dirname ${f})
+    base=$(basename ${f} '.html')
+    if xmlwf ${f}
+    then
+	echo "info: will work on ${f}, it is well-formed XML"
+    else
+        faked="${path}/${base}.${fakext}"
+	echo "mv ${f} ${faked}"
+	mv ${f} ${faked}
+	moved[${count}]="${faked}"
+	count=$((${count}+1))
+    fi
+done
+
+echo "--------- SS step: run UVic Ending Project’s Static Site generator"
+sCWD=$(pwd)
+cd ${UVEPSSdir}
+ant -DssConfigFile=${sCWD}/uvepss_config.xml
+cd ${sCWD}
+
+echo "--------- POSTSS step: move the _NOT files back to just .html"
+for f in ${moved[@]} ; do
+    mv ${f} $(dirname ${f})/$(basename ${f} ${fakext}).html
+done </echo>
+    <chmod file="${toDir.static}${file.separator}uvepss.bash" perm="ugo+rx"/>
+  </target>
+
+  <!-- Generate a static version of the DHQ website, and ZIP it for easy transfer -->
+  <target name="generateZipSite" depends="generateSite">
     <antcall target="compressStatic"/>
   </target>
   

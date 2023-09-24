@@ -4,7 +4,7 @@
 <config xmlns="http://hcmc.uvic.ca/ns/staticSearch" version="1">
   <params>
     <searchFile>staticSearchTest.xhtml</searchFile>
-    <recurse>false</recurse>
+    <recurse>true</recurse>
     <stopwordsFile>data/stopwords_en.txt</stopwordsFile>
     <dictionaryFile>data/words_en.txt</dictionaryFile>
     <!-- above required; below optional -->
