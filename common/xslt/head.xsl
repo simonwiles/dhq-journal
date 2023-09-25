@@ -17,8 +17,7 @@
           <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
           <meta name="article type" class="staticSearch_desc" content="{/*/tei:teiHeader//dhq:articleType}"/>
           <meta name="date of publication" class="staticSearch_date" content="{/*/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:date/@when}"/>
-          <meta name="volume" class="staticSearch_num" content="{/*/tei:teiHeader//tei:idno[@type = 'volume']}"/>
-          <meta name="issue"  class="staticSearch_num" content="{/*/tei:teiHeader//tei:idno[@type = 'issue' ]}"/>
+          <meta name="volume" class="staticSearch_num" content="{/*/tei:teiHeader//tei:idno[@type = 'volume']}.{/*/tei:teiHeader//tei:idno[@type = 'issue' ]}"/>
           <xsl:apply-templates select="/*/tei:teiHeader//tei:keywords//tei:item[ normalize-space(.) != '']" mode="keyword"/>
           <title>
                 <!-- Articles can have more than one <title> in <titleStmt> if more 

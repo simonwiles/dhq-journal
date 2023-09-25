@@ -144,7 +144,7 @@ is loaded when Ant starts up. Please run Ant again like this:
         <!--<file name="sitemap.xmap"/>-->
         <file name="sruExplain.xml"/>
 	<file name="uvepss_config.xml"/>
-	<file name="staticSearchTest.xhtml"/>
+	<file name="search.html"/>
       </filelist>
     </copy>
     <!-- Copy specific files in the data/ directory -->

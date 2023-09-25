@@ -3,7 +3,7 @@
 <!-- See, e.g., https://endings.uvic.ca/staticSearch/docs/howDoIUseIt.html -->
 <config xmlns="http://hcmc.uvic.ca/ns/staticSearch" version="1">
   <params>
-    <searchFile>staticSearchTest.xhtml</searchFile>
+    <searchFile>search.html</searchFile>
     <recurse>true</recurse>
     <stopwordsFile>data/stopwords_en.txt</stopwordsFile>
     <dictionaryFile>data/words_en.txt</dictionaryFile>
