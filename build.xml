@@ -22,6 +22,8 @@
   <!-- Within ${toDir.base}, individually generated static site files will be 
     written to the ${context} directory. -->
   <property name="toDir.static" value="${toDir.base}${file.separator}${context}"/>
+  <!-- And possibly re-written to the uvepps version thereof. -->
+  <property name="toDir.uvepss" value="${toDir.base}/uvepps_${context}"/>
   
   <!-- Check for the XML Resolver Java class, as it is a dependency for using the 
     Saxon HE processor. From the Saxon documentation on XSLT with Ant:
@@ -98,10 +100,18 @@ is loaded when Ant starts up. Please run Ant again like this:
     <echo>  it uses absolute filepaths to its assets. Thus it will not work properly</echo>
     <echo>  (and will look ugly) if viewed on your local machine.</echo>
     <echo>generateSite</echo>
-    <echo>  As above, but also copies over the submissions/ subdirectory, the common/</echo>
-    <echo>  subdirectory, and some specific (including those needed for generating</echo>
-    <echo>  the UVEPSS (University of Victoria Endings’s Project Static Search) indices</echo>
-    <echo>  and search page.</echo>
+    <echo>  As above, but also copies over the submissions/ and common/ subdirectories,</echo>
+    <echo>  and some specific files (including those needed for generating the UVEPSS</echo>
+    <echo>  (University of Victoria Endings’s Project Static Search) indices and search</echo>
+    <echo>  page.</echo>
+    <echo>generateSearchable</echo>
+    <echo>  Reads in the ${toDir}/vol/ directory created by the "generateSite" target,</echo>
+    <echo>  and creates a copy intended for processing by the Univesity of Victoria’s</echo>
+    <echo>  Endings Project’s Static Search utility. The new directoy is called</echo>
+    <echo>  ${toDir}/uvepss_vol/. It has the same structure as the original vol/</echo>
+    <echo>  directory, but for each HTML for for which there is a matching XML file,</echo>
+    <echo>  modifications have been made to the HTML file (mostly by extracting</echo>
+    <echo>  metadata from the XML file).</echo>
     <echo>generateZipSite</echo>
     <echo>  As above, but also ZIPs up the entire ${toDir.static}/ directory to make</echo>
     <echo>  it easy to transfer (e.g., to a server). The output file can be found at</echo>
@@ -316,6 +326,23 @@ done </echo>
       <param name="doProofing" expression="true"/>
     </xslt>
     <echo message="Created article preview at ${previewDir}${file.separator}${article.id}.html"/>
+  </target>
+
+  <target name="generateSearchable" depends="generateSite"
+	  description="Modify generateSite output for UVEPSS.">
+    <xslt in="${toDir.static}/article-map.xml"
+          out="${toDir.static}/static_to_staticSearch_out.xml"
+          style="common/xslt/static_to_staticSearch.xslt"
+          classpath="${processor.location}"
+          force="true"
+          failOnTransformationError="false">
+      <factory name="${processor.name}"/>
+      <param name="context" expression="${context}"/>
+      <param name="dir-separator" expression="${file.separator}"/>
+      <!-- A relative path in <xsl:result-document> will be calculated relative to 
+        the output file's directory, ${toDir}. -->
+      <param name="static-dir" expression="${context}"/>
+    </xslt>
   </target>
   
   <target name="zipPreviewArticle"
