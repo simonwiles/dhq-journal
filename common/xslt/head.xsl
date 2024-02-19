@@ -158,7 +158,6 @@ s.parentNode.insertBefore(ga, s);
 		    content="{$srcHeader/tei:fileDesc/tei:titleStmt/tei:title[1]!normalize-space(.)}"/>
               <script type="text/javascript" src="../../../uvepss/ssHighlight.js"/>
             </xsl:if>
-            
         </head>
     </xsl:template>
     
