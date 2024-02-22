@@ -139,7 +139,6 @@ s.parentNode.insertBefore(ga, s);
               <meta name="date of publication" class="staticSearch_date" content="{$srcHeader/tei:fileDesc/tei:publicationStmt/tei:date/@when}"/>
               <meta name="volume" class="staticSearch_num" content="{$srcHeader//tei:idno[@type eq 'volume']}"/>
               <meta name="issue"  class="staticSearch_num" content="{$srcHeader//tei:idno[@type eq 'issue']}"/>
-<<<<<<< HEAD
 	      <!--
 		  As of this writing (2024-02-21) —
 		  * There are no .xml files with 0 /*/teiHeader/fileDesc/titleStmt/title (of course not, that would be invalid)
@@ -159,10 +158,6 @@ s.parentNode.insertBefore(ga, s);
 		    content="{$srcHeader/tei:fileDesc/tei:titleStmt/tei:title[1]!normalize-space(.)}"/>
               <script type="text/javascript" src="../../../uvepss/ssHighlight.js"/>
             </xsl:if>
-=======
-            </xsl:if>
-            
->>>>>>> 7e1f681b (bug fix: forgot namespace decls.)
         </head>
     </xsl:template>
     
