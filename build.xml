@@ -233,7 +233,7 @@ is loaded when Ant starts up. Please run Ant again like this:
     <ant antfile="${toDir.base}${file.separator}article-map.xml" dir="${basedir}" 
          target="zipArticleXml" inheritRefs="true"/>
     <!-- Generate the ZIP file of the entire static site. -->
-    <antcall target="compressStatic"/>
+    <!-- <antcall target="compressStatic"/> -->
   </target>
   
   <!-- Compress the static site's files for backup and transportation. -->
